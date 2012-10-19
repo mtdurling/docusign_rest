@@ -159,7 +159,12 @@ module DocusignRest
         template_role = {
           name: signer[:name],
           email: signer[:email],
-          roleName: signer[:role_name]
+          roleName: signer[:role_name],
+          tabs: {
+            textTabs: get_text_tabs(signer[:text_tabs]),
+            radioGroupTabs: get_radio_group_tabs(signer[:radio_group_tabs]),
+            checkboxTabs: get_checkbox_tabs(signer[:checkbox_tabs])
+          }
         }
 
         template_role[:clientUserId] = signer[:email] if signer[:embedded] == true
@@ -168,8 +173,34 @@ module DocusignRest
       end
       template_roles
     end
-
-
+    
+    def get_text_tabs(tabs)
+      tabs.map do |tab|
+        {
+          tabLabel: tab[:tab_label],
+          value: tab[:value]
+        }              
+      end
+    end
+                 
+    def get_radio_group_tabs(tabs)
+      tabs.map do |tab| 
+        {
+          groupName: tab[:group_name],
+          radios: tab[:radios]
+        }
+      end
+    end
+    
+    def get_checkbox_tabs(tabs)
+      tabs.map do |tab|
+        {
+          tabLabel: tab[:tab_label],
+          selected: tab[:selected]
+        }
+      end
+    end
+    
     # Internal: takes an array of hashes of signers required to complete a
     # document and allows for setting several options. Not all options are
     # currently dynamic but that's easy to change/add which I (and I'm
