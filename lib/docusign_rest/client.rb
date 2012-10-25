@@ -698,8 +698,8 @@ module DocusignRest
     # Public retrieves list of assets from a given envelope 
     #
     # envelope_assets  - defaults to :documents but can be any one 
-    #                    one of :documents, :audit_events, :custom_fields, :notification
-    # envelope_id      - ID of the envelope from which the doc will be retrieved
+    #                    of :documents, :audit_events, :custom_fields, :notification
+    # envelope_id      - ID of the envelope from which the assets will be retrieved
     # headers          - Optional hash of headers to merge into the existing
     #                    required headers for a multipart request.
     #
