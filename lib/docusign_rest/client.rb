@@ -694,6 +694,33 @@ module DocusignRest
         output << response.body
       end
     end
+    
+    # Public retrieves list of assets from a given envelope 
+    #
+    # envelope_assets  - defaults to :documents but can be any one 
+    #                    one of :documents, :audit_events, :custom_fields, :notification
+    # envelope_id      - ID of the envelope from which the doc will be retrieved
+    # headers          - Optional hash of headers to merge into the existing
+    #                    required headers for a multipart request.
+    #
+    # Example
+    #
+    #   client.get_envelope_assets(envelope_id: @envelope_response["envelopeId"])
+    #     
+    # Returns a hash of detailed info about the envelope assets
+    def get_envelope_assets(options={})
+      content_type = {'Content-Type' => 'application/json'}
+      content_type.merge(options[:headers]) if options[:headers]
+      options[:envelope_assets] ||= :documents
+
+      uri = build_uri("/accounts/#{@acct_id}/envelopes/#{options[:envelope_id]}/#{options[:envelope_assets]}")
+      
+      http = initialize_net_http_ssl(uri)
+      request = Net::HTTP::Get.new(uri.request_uri, headers(content_type))
+      response = http.request(request)
+            
+      parsed_response = JSON.parse(response.body)
+    end
   end
 
 end
